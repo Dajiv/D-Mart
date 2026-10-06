@@ -1,0 +1,639 @@
+/* Classic Green Color Theme */
+
+:root {
+    --primary-color: #1b5e20;
+    --primary-hover: #2e7d32;
+    --light-green: #e8f5e9;
+    --border-color: #c8e6c9;
+    --text-color: #333333;
+    --bg-color: #f4f9f4;
+}
+
+
+/* Global Reset */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+
+/* Page */
+
+body {
+    background: linear-gradient(
+        135deg,
+        #e8f5e9 0%,
+        #c8e6c9 100%
+    );
+
+    color: var(--text-color);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    min-height: 100vh;
+
+    padding: 20px;
+}
+
+
+/* Page Animation */
+
+@keyframes fadeInSlideUp {
+
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+}
+
+
+/* Registration Container */
+
+.registration-container {
+    background: #ffffff;
+
+    width: 100%;
+    max-width: 650px;
+
+    padding: 35px;
+
+    border-radius: 12px;
+
+    box-shadow:
+        0 8px 25px rgba(27, 94, 32, 0.15);
+
+    border-top: 5px solid var(--primary-color);
+
+    animation:
+        fadeInSlideUp
+        0.8s
+        cubic-bezier(0.16, 1, 0.3, 1)
+        forwards;
+
+    margin-block: auto;
+}
+
+
+/* Form Header */
+
+.form-header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.form-header h2 {
+    color: var(--primary-color);
+
+    font-size: 26px;
+
+    margin-bottom: 8px;
+}
+
+.form-header p {
+    color: #666;
+
+    font-size: 14px;
+}
+
+
+/* Form Errors */
+
+.form-error,
+.errorlist {
+    color: #a32121;
+
+    font-size: 14px;
+}
+
+
+/* Main Form Grid */
+
+.form-grid {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 15px;
+}
+
+
+/* Form Group */
+
+.form-group {
+    display: flex;
+
+    flex-direction: column;
+}
+
+
+/* Full Width Field */
+
+.form-group.full-width {
+    grid-column: span 2;
+}
+
+
+/* Labels */
+
+.form-group label {
+    font-size: 13px;
+
+    font-weight: 600;
+
+    margin-bottom: 6px;
+
+    color: #444;
+}
+
+
+/* Inputs and Select */
+
+.form-group input,
+.form-group select {
+    width: 100%;
+
+    padding: 10px 12px;
+
+    border: 1px solid #ccc;
+
+    border-radius: 6px;
+
+    font-size: 14px;
+
+    background-color: #fff;
+
+    transition: all 0.3s ease;
+}
+
+
+/* Input Focus */
+
+.form-group input:focus,
+.form-group select:focus {
+
+    border-color: var(--primary-color);
+
+    outline: none;
+
+    box-shadow:
+        0 0 0 3px var(--light-green);
+}
+
+
+/* Expandable Seller Section */
+
+.expandable-section {
+    width: 100%;
+
+    display: none;
+}
+
+
+.expandable-section.show {
+
+    display: block;
+
+    overflow: visible;
+
+    margin-top: 5px;
+
+    margin-bottom: 5px;
+
+    animation:
+        sellerFieldsReveal
+        0.25s
+        ease-out;
+}
+
+
+@keyframes sellerFieldsReveal {
+
+    from {
+        opacity: 0;
+
+        transform: translateY(-6px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform: translateY(0);
+    }
+
+}
+
+
+/* Seller Fields Grid */
+
+.seller-inner-grid {
+
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns: minmax(0, 1fr);
+
+    align-items: start;
+
+    gap: 15px;
+
+    padding: 15px;
+
+    background: var(--light-green);
+
+    border: 1px solid var(--border-color);
+
+    border-radius: 8px;
+}
+
+
+/* Seller Form Groups */
+
+.seller-inner-grid .form-group {
+
+    width: 100%;
+
+    min-width: 0;
+}
+
+
+/* Seller Inputs */
+
+.seller-inner-grid input,
+.seller-inner-grid textarea {
+
+    width: 100%;
+
+    box-sizing: border-box;
+}
+
+
+/* Business Description */
+
+.seller-inner-grid textarea {
+
+    display: block;
+
+    min-height: 140px;
+
+    resize: vertical;
+}
+
+
+/* Password Wrapper */
+
+.password-wrapper {
+
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+}
+
+
+.password-wrapper input {
+
+    width: 100%;
+
+    padding-right: 40px;
+}
+
+
+.password-wrapper i {
+
+    position: absolute;
+
+    right: 12px;
+
+    cursor: pointer;
+
+    color: #777;
+
+    font-size: 14px;
+
+    transition: color 0.2s ease;
+}
+
+
+.password-wrapper i:hover {
+
+    color: var(--primary-color);
+}
+
+
+/* Submit Button */
+
+.submit-btn {
+
+    grid-column: span 2;
+
+    width: 100%;
+
+    margin-top: 20px;
+
+    padding: 12px;
+
+    background-color: var(--primary-color);
+
+    color: white;
+
+    border: none;
+
+    border-radius: 6px;
+
+    font-size: 16px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.3s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.submit-btn:hover {
+
+    background-color: var(--primary-hover);
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 4px 12px rgba(27, 94, 32, 0.25);
+}
+
+
+/* Login Section */
+
+.login-section {
+
+    width: 100%;
+
+    margin-top: 25px;
+
+    padding-top: 20px;
+
+    border-top: 1px solid #e5e7eb;
+
+    text-align: center;
+}
+
+
+.login-section p {
+
+    margin: 0 0 12px;
+
+    color: #666;
+
+    font-size: 14px;
+}
+
+
+/* Login Button */
+
+.login-btn {
+
+    display: inline-block;
+
+    padding: 10px 28px;
+
+    border: 1px solid var(--primary-color);
+
+    border-radius: 6px;
+
+    background: transparent;
+
+    color: var(--primary-color);
+
+    text-decoration: none;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        all 0.3s ease;
+}
+
+
+.login-btn:hover {
+
+    background-color: var(--primary-color);
+
+    color: #ffffff;
+}
+
+
+/* Modal */
+
+.modal {
+
+    display: none;
+
+    position: fixed;
+
+    z-index: 1000;
+
+    left: 0;
+
+    top: 0;
+
+    width: 100%;
+
+    height: 100%;
+
+    background-color: rgba(0, 0, 0, 0.5);
+
+    backdrop-filter: blur(3px);
+
+    justify-content: center;
+
+    align-items: center;
+}
+
+
+/* Modal Animation */
+
+@keyframes modalPopUp {
+
+    from {
+
+        opacity: 0;
+
+        transform: scale(0.8);
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform: scale(1);
+    }
+
+}
+
+
+/* Modal Content */
+
+.modal-content {
+
+    background: #ffffff;
+
+    padding: 25px;
+
+    border-radius: 10px;
+
+    width: 90%;
+
+    max-width: 400px;
+
+    text-align: center;
+
+    box-shadow:
+        0 5px 20px rgba(0, 0, 0, 0.3);
+
+    border-top: 4px solid #d32f2f;
+
+    animation:
+        modalPopUp
+        0.3s
+        cubic-bezier(0.175, 0.885, 0.32, 1.275)
+        forwards;
+}
+
+
+/* Modal Header */
+
+.modal-header {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 10px;
+
+    margin-bottom: 12px;
+
+    color: #d32f2f;
+}
+
+
+/* Modal Message */
+
+.modal-content p {
+
+    font-size: 14px;
+
+    color: #555;
+
+    margin-bottom: 20px;
+
+    white-space: pre-line;
+
+    text-align: left;
+
+    background: #f9f9f9;
+
+    padding: 12px;
+
+    border-radius: 5px;
+
+    border: 1px solid #eee;
+}
+
+
+/* Modal Button */
+
+.modal-btn {
+
+    background-color: #d32f2f;
+
+    color: white;
+
+    border: none;
+
+    padding: 8px 24px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    border-radius: 4px;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s ease,
+        transform 0.1s ease;
+}
+
+
+.modal-btn:hover {
+
+    background-color: #c62828;
+
+    transform: scale(1.05);
+}
+
+
+/* Responsive */
+
+@media (max-width: 600px) {
+
+    body {
+
+        padding: 16px;
+    }
+
+
+    .registration-container {
+
+        padding: 25px 20px;
+    }
+
+
+    .form-grid {
+
+        grid-template-columns: 1fr;
+    }
+
+
+    .form-group.full-width {
+
+        grid-column: span 1;
+    }
+
+
+    .submit-btn {
+
+        grid-column: span 1;
+    }
+
+
+    .login-btn {
+
+        width: 100%;
+
+        text-align: center;
+    }
+
+}
+

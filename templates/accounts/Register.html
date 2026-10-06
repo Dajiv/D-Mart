@@ -1,0 +1,218 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D-Mart Registration Portal</title>
+    <link rel="stylesheet" href="{% static 'CSS/accounts/register.css' %}?v=2">
+    <!-- FontAwesome for eye icons and warning icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="registration-container">
+        <div class="form-header">
+            <h2>D-Mart Registration</h2>
+            <p>Create your account to get started</p>
+        </div>
+
+        <form id="registrationForm" method="post" onsubmit="return validateForm(event)">
+            {% csrf_token %}
+            {% if error %}<p class="form-error" role="alert">{{ error }}</p>{% endif %}
+            {% if form %}{{ form.errors }}{% endif %}
+            <div class="form-grid">
+                <!-- First Name -->
+                <div class="form-group">
+                    <label for="firstName">First Name *</label>
+                    <input type="text" id="firstName" name="first_name" placeholder="First name" required value="{{ form.first_name.value|default_if_none:'' }}">
+                </div>
+
+                <!-- Last Name -->
+                <div class="form-group">
+                    <label for="lastName">Last Name *</label>
+                    <input type="text" id="lastName" name="last_name" placeholder="Last name" required value="{{ form.last_name.value|default_if_none:'' }}">
+                </div>
+
+                <!-- Phone Number -->
+                <div class="form-group full-width">
+                    <label for="phone">Phone Number *</label>
+                    <input type="tel" id="phone" name="phone" placeholder="Phone number" required value="{{ form.phone.value|default_if_none:'' }}">
+                </div>
+
+                <!-- Account Type (Dropdown) -->
+                <div class="form-group full-width">
+                    <label for="accountType">Account Type *</label>
+                    <select id="accountType" name="accountType" onchange="toggleAccountTypeFields()" required>
+                        <option value="" {% if not account_type %}selected{% endif %}>-- Select Account Type --</option>
+                        <option value="buyer" {% if account_type == 'buyer' %}selected{% endif %}>Buyer</option>
+                        <option value="seller" {% if account_type == 'seller' %}selected{% endif %}>Seller</option>
+                    </select>
+                </div>
+
+                <!-- Expandable Seller Fields (Hidden by default) -->
+                <div id="sellerFields" class="expandable-section full-width{% if account_type == 'seller' %} show{% endif %}">
+                    <div class="seller-inner-grid">
+                        <div class="form-group">
+                            <label for="businessName">Business Name *</label>
+                            <input type="text" id="businessName" name="business_name" placeholder="Your business name" value="{{ form.business_name.value|default_if_none:'' }}" {% if account_type != 'seller' %}disabled{% endif %} {% if account_type == 'seller' %}required{% endif %}>
+                        </div>
+                        <div class="form-group">
+                            <label for="businessDescription">Business Description *</label>
+                            <textarea id="businessDescription" name="business_description" placeholder="Describe your business" {% if account_type != 'seller' %}disabled{% endif %} {% if account_type == 'seller' %}required{% endif %}>{{ form.business_description.value|default_if_none:'' }}</textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Username -->
+                <div class="form-group full-width">
+                    <label for="username">Username *</label>
+                    <input type="text" id="username" name="username" placeholder="Choose a username" required value="{{ form.username.value|default_if_none:'' }}">
+                </div>
+
+                <!-- Email -->
+                <div class="form-group full-width">
+                    <label for="email">Email *</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email address" required value="{{ form.email.value|default_if_none:'' }}">
+                </div>
+
+                <!-- Password -->
+                <div class="form-group password-group">
+                    <label for="password">Password *</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="password" name="password1" placeholder="Create password" required>
+                        <i class="fa-solid fa-eye" id="togglePassword" onclick="togglePasswordVisibility('password', 'togglePassword')"></i>
+                    </div>
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="form-group password-group">
+                    <label for="confirmPassword">Confirm Password *</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="confirmPassword" name="password2" placeholder="Confirm password" required>
+                        <i class="fa-solid fa-eye" id="toggleConfirmPassword" onclick="togglePasswordVisibility('confirmPassword', 'toggleConfirmPassword')"></i>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn">Register</button>
+        </form>
+
+        <div class="login-section">
+            <p>Already have an account?</p>
+            <a href="{% url 'login' %}" class="login-btn">Login</a>
+        </div>
+    </div>
+
+    <!-- Custom Popup Modal -->
+    <div id="errorModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <h3>Incomplete Form</h3>
+            </div>
+            <p id="errorMessage">Please fill in all required fields.</p>
+            <button onclick="closeModal()" class="modal-btn">OK</button>
+        </div>
+    </div>
+
+    <script>
+        // Toggle Seller Fields with smooth animation
+        function toggleAccountTypeFields() {
+            const accountType = document.getElementById('accountType').value;
+            const sellerFields = document.getElementById('sellerFields');
+
+            if (accountType === 'seller') {
+                sellerFields.classList.add('show');
+            } else {
+                sellerFields.classList.remove('show');
+                // Clear seller inputs when switched back to buyer
+                document.getElementById('businessName').value = '';
+                document.getElementById('businessDescription').value = '';
+            }
+
+            const businessName = document.getElementById('businessName');
+            const businessDescription = document.getElementById('businessDescription');
+            businessName.disabled = accountType !== 'seller';
+            businessDescription.disabled = accountType !== 'seller';
+            businessName.required = accountType === 'seller';
+            businessDescription.required = accountType === 'seller';
+        }
+
+        // Toggle password visibility with eye icon
+        function togglePasswordVisibility(fieldId, iconId) {
+            const passwordField = document.getElementById(fieldId);
+            const icon = document.getElementById(iconId);
+            
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                icon.classList.remove("fa-eye");
+                icon.classList.add("fa-eye-slash");
+            } else {
+                passwordField.type = "password";
+                icon.classList.remove("fa-eye-slash");
+                icon.classList.add("fa-eye");
+            }
+        }
+
+        // Validate form fields on submit
+        function validateForm(event) {
+            // Base fields required for everyone
+            let fields = [
+                { id: 'firstName', name: 'First Name' },
+                { id: 'lastName', name: 'Last Name' },
+                { id: 'phone', name: 'Phone Number' },
+                { id: 'accountType', name: 'Account Type' },
+                { id: 'username', name: 'Username' },
+                { id: 'email', name: 'Email' },
+                { id: 'password', name: 'Password' },
+                { id: 'confirmPassword', name: 'Confirm Password' }
+            ];
+
+            // If account type is seller, dynamically add business fields to validation
+            const accountType = document.getElementById('accountType').value;
+            if (accountType === 'seller') {
+                fields.push(
+                    { id: 'businessName', name: 'Business Name' },
+                { id: 'businessDescription', name: 'Business Description' }
+                );
+            }
+
+            let blankFields = [];
+
+            // Check each field
+            fields.forEach(field => {
+                const element = document.getElementById(field.id);
+                if (element && element.value.trim() === "") {
+                    blankFields.push(field.name);
+                }
+            });
+
+            // If any field is blank, show popup warning
+            if (blankFields.length > 0) {
+                let msg = "Please fill in the following required field(s):\n• " + blankFields.join("\n• ");
+                document.getElementById('errorMessage').innerText = msg;
+                document.getElementById('errorModal').style.display = "flex";
+            } else {
+                // Check if passwords match
+                const pass = document.getElementById('password').value;
+                const confirmPass = document.getElementById('confirmPassword').value;
+
+                if (pass !== confirmPass) {
+                    document.getElementById('errorMessage').innerText = "Passwords do not match!";
+                    document.getElementById('errorModal').style.display = "flex";
+                    return;
+                }
+
+                return true;
+            }
+            return false;
+        }
+
+        // Close the popup modal
+        function closeModal() {
+            document.getElementById('errorModal').style.display = "none";
+        }
+    </script>
+</body>
+</html>

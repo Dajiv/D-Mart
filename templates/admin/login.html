@@ -1,0 +1,54 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D-Mart | Admin Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'CSS/login.css' %}">
+</head>
+<body>
+
+    <!-- Left Side: Solid D-Mart Green Half -->
+    <div class="split-left">
+        <div class="brand-content">
+            <h1>D-Mart</h1>
+            <p>Industrial Marketplace Management Portal</p>
+        </div>
+    </div>
+
+    <!-- Right Side: Clean White Half with Form -->
+    <div class="split-right">
+        <div class="login-card">
+            <h2>Admin Login</h2>
+            <p class="subtitle">Access your D-Mart dashboard securely</p>
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label>Username / Email</label>
+                    <input type="text" name="username" class="form-control" placeholder="Enter username" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" name="password" class="form-control" placeholder="••••••••" required>
+                </div>
+
+                <div class="form-actions">
+                    <label class="remember">
+                        <input type="checkbox"> Remember me
+                    </label>
+                    <a href="#" class="forgot">Forgot password?</a>
+                </div>
+
+                <button type="submit" class="btn-login">LOGIN</button>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

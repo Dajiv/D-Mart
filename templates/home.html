@@ -1,0 +1,250 @@
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>D-Mart - Home</title>
+
+    <!-- Home Page CSS -->
+    <link rel="stylesheet"
+          href="{% static 'css/home.css' %}">
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+</head>
+
+<body>
+
+    <!-- Header / Navbar Section -->
+
+    <header class="navbar">
+
+        <div class="nav-container">
+
+            <!-- Logo -->
+
+            <div class="logo">
+
+                <h1>D-Mart</h1>
+
+            </div>
+
+
+            <!-- Search Bar -->
+
+            <div class="search-bar">
+
+                <input
+                    type="text"
+                    placeholder="Search products, brands and more..."
+                >
+
+                <button type="button">
+
+                    <i class="fa-solid fa-search"></i>
+
+                </button>
+
+            </div>
+
+
+            <!-- Navigation Actions -->
+
+            <div class="nav-actions">
+
+                <a href="#"
+                   class="cart-btn">
+
+                    <i class="fa-solid fa-cart-shopping"></i>
+
+                    Cart
+
+                    <span class="cart-count">
+                        0
+                    </span>
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- Main Content -->
+
+    <main class="main-content">
+
+
+        <!-- Categories Section -->
+
+        <section class="categories-section">
+
+            <h2>
+                Categories
+            </h2>
+
+
+            <div class="categories-grid">
+
+
+                <!-- Electronics -->
+
+                <a href="#"
+                   class="category-card">
+
+                    <i class="fa-solid fa-laptop"></i>
+
+                    <span>
+                        Electronics
+                    </span>
+
+                </a>
+
+
+                <!-- Tools -->
+
+                <a href="#"
+                   class="category-card">
+
+                    <i class="fa-solid fa-hammer"></i>
+
+                    <span>
+                        Tools
+                    </span>
+
+                </a>
+
+
+                <!-- Machines -->
+
+                <a href="#"
+                   class="category-card">
+
+                    <i class="fa-solid fa-gears"></i>
+
+                    <span>
+                        Machines
+                    </span>
+
+                </a>
+
+
+            </div>
+
+        </section>
+
+
+        <!-- Featured Products Section -->
+
+        <section class="featured-section">
+
+
+            <!-- Section Header -->
+
+            <div class="section-header">
+
+                <h2>
+                    Featured Products
+                </h2>
+
+                <span class="scroll-hint">
+
+                    Scroll horizontally to view more
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </span>
+
+            </div>
+
+
+            <!-- Product Scroll Container -->
+
+            <div class="product-scroll-container">
+
+
+                <!-- Product 1 -->
+
+                <a href="#"
+                   class="product-slot">
+
+                    <div class="product-image-slot">
+
+                        <span>
+                            Image Position 1
+                        </span>
+
+                    </div>
+
+                    {% for product in products %}
+
+<div class="product-card">
+
+    <div class="product-image">
+        {% if product.image %}
+            <img
+                src="{{ product.image.url }}"
+                alt="{{ product.name }}"
+            >
+        {% else %}
+            <div class="no-image">
+                No Image
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="product-info">
+
+        <h3>{{ product.name }}</h3>
+
+        <p class="product-price">
+            Rs. {{ product.price }}
+        </p>
+
+        <p class="product-stock">
+            Stock: {{ product.stock }}
+        </p>
+
+    </div>
+
+</div>
+
+{% empty %}
+
+<p>No products available.</p>
+
+    {% endfor %}
+
+    </section>
+
+
+    </main>
+
+
+    <!-- Footer -->
+
+    <footer>
+
+        <p>
+            &copy; 2026 D-Mart. All rights reserved.
+        </p>
+
+    </footer>
+
+
+</body>
+
+</html>
+
