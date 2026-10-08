@@ -1,0 +1,86 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ product.name }} | D-Mart</title>
+    <link rel="stylesheet" href="{% static 'css/product/product_detail.css' %}">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Header / Navbar Section -->
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <a href="{% url 'home' %}"><h1>D-Mart</h1></a>
+            </div>
+            <div class="search-bar">
+                <input type="text" placeholder="Search products, brands and more...">
+                <button type="button"><i class="fa-solid fa-search"></i></button>
+            </div>
+            <div class="nav-actions">
+                <a href="#" class="cart-btn">
+                    <i class="fa-solid fa-cart-shopping"></i> Cart <span class="cart-count">0</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Product Detail Container -->
+    <main class="main-content">
+        <div class="breadcrumb">
+            <a href="{% url 'home' %}"><i class="fa-solid fa-arrow-left"></i> Back to Home</a>
+        </div>
+
+        <div class="product-detail-card">
+            <!-- Product Image Section -->
+            <div class="product-image-section">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                {% else %}
+                    <div class="no-image-placeholder">
+                        <i class="fa-solid fa-image"></i>
+                        <p>No image available</p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Product Info Section -->
+            <div class="product-info-section">
+                <h1 class="product-title">{{ product.name }}</h1>
+                <h2 class="product-price">Rs. {{ product.price }}</h2>
+                
+                <div class="product-meta">
+                    <p class="stock-status">
+                        <i class="fa-solid fa-boxes-stacked"></i> Stock Available: <span>{{ product.stock }}</span>
+                    </p>
+                    <p class="seller-info">
+                        <i class="fa-solid fa-store"></i> Seller: <strong>{{ product.seller.username }}</strong>
+                    </p>
+                </div>
+
+                <div class="product-description">
+                    <h3>Description</h3>
+                    <p>{{ product.description }}</p>
+                </div>
+
+                <div class="action-buttons">
+                    <a href="{% url 'add_to_cart' product.id %}" class="add-to-cart-btn">
+                        <i class="fa-solid fa-cart-plus"></i>
+                            Add to Cart
+                     </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 D-Mart. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>
