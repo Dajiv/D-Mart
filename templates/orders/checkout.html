@@ -1,0 +1,329 @@
+```html
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Checkout | D-Mart</title>
+
+    <meta name="description" content="Review your D-Mart order, delivery details, and payment method.">
+
+    <link rel="stylesheet" href="{% static 'CSS/orders/checkout.css' %}">
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    >
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <header class="navbar">
+        <div class="nav-container">
+
+            <div class="logo">
+                <a href="{% url 'home' %}" aria-label="D-Mart Home">
+                    <h1>D-Mart</h1>
+                </a>
+            </div>
+
+            <nav class="nav-actions" aria-label="Checkout navigation">
+                <a href="{% url 'cart' %}" class="back-link">
+                    <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+                    <span>Back to Cart</span>
+                </a>
+            </nav>
+
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <!-- Breadcrumb -->
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+            <a href="{% url 'home' %}">Home</a>
+            <span aria-hidden="true"> &gt; </span>
+
+            <a href="{% url 'cart' %}">Cart</a>
+            <span aria-hidden="true"> &gt; </span>
+
+            <span aria-current="page">Checkout</span>
+        </nav>
+
+        <!-- Page Heading -->
+        <section class="checkout-header">
+            <h2>Secure Checkout</h2>
+            <p>
+                Review your order, enter your delivery details,
+                and select your payment method.
+            </p>
+        </section>
+
+        <!-- Django Messages -->
+        {% if messages %}
+            <div class="messages-container" aria-live="polite">
+                {% for message in messages %}
+                    <div class="alert {{ message.tags }}" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- Checkout Form -->
+        <form
+            method="POST"
+            action="{% url 'checkout' %}"
+            class="checkout-grid"
+        >
+            {% csrf_token %}
+
+            <!-- Left: Delivery and Payment -->
+            <div class="delivery-section">
+
+                <!-- Delivery Details -->
+                <section class="card">
+                    <h3>
+                        <i class="fa-solid fa-truck-fast" aria-hidden="true"></i>
+                        Delivery Information
+                    </h3>
+
+                    <div class="form-group">
+                        <label for="full_name">Full Name *</label>
+
+                        <input
+                            type="text"
+                            id="full_name"
+                            name="full_name"
+                            value="{{ default_name|default:'' }}"
+                            placeholder="Enter your full name"
+                            autocomplete="name"
+                            maxlength="150"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Phone Number *</label>
+
+                        <input
+                            type="tel"
+                            id="phone"
+                            name="phone"
+                            placeholder="e.g. 0712345678"
+                            autocomplete="tel"
+                            maxlength="15"
+                            pattern="[0-9+() -]{9,15}"
+                            title="Enter a valid phone number"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="address">Full Delivery Address *</label>
+
+                        <textarea
+                            id="address"
+                            name="address"
+                            rows="4"
+                            placeholder="House number, street, village or town"
+                            autocomplete="street-address"
+                            maxlength="1000"
+                            required
+                        ></textarea>
+                    </div>
+
+                    <div class="form-row">
+
+                        <div class="form-group">
+                            <label for="district">District *</label>
+
+                            <input
+                                type="text"
+                                id="district"
+                                name="district"
+                                placeholder="e.g. Jaffna"
+                                autocomplete="address-level2"
+                                maxlength="100"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="postal_code">Postal Code</label>
+
+                            <input
+                                type="text"
+                                id="postal_code"
+                                name="postal_code"
+                                placeholder="e.g. 40000"
+                                autocomplete="postal-code"
+                                maxlength="12"
+                            >
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- Payment Method -->
+                <section class="card payment-card">
+                    <h3>
+                        <i class="fa-solid fa-wallet" aria-hidden="true"></i>
+                        Payment Method
+                    </h3>
+
+                    <div class="payment-options">
+
+                        <label class="payment-option">
+                            <input
+                                type="radio"
+                                name="payment_method"
+                                value="COD"
+                                checked
+                                required
+                            >
+
+                            <div class="option-details">
+                                <strong>Cash on Delivery (COD)</strong>
+
+                                <span>
+                                    Pay when your order is delivered.
+                                    Delivery OTP verification can be added
+                                    in a future module.
+                                </span>
+                            </div>
+                        </label>
+
+                        <label class="payment-option">
+                            <input
+                                type="radio"
+                                name="payment_method"
+                                value="ONLINE"
+                                required
+                            >
+
+                            <div class="option-details">
+                                <strong>Online Payment</strong>
+
+                                <span>
+                                    Online payment requires a configured
+                                    payment gateway. Payment must be verified
+                                    before marking an order as paid.
+                                </span>
+                            </div>
+                        </label>
+
+                    </div>
+                </section>
+
+            </div>
+
+            <!-- Right: Order Summary -->
+            <aside class="summary-section" aria-label="Order summary">
+
+                <section class="card summary-card">
+
+                    <h3>
+                        <i class="fa-solid fa-receipt" aria-hidden="true"></i>
+                        Order Summary
+                    </h3>
+
+                    <div class="summary-items-list">
+
+                        {% for item in valid_items %}
+                            <div class="summary-item">
+
+                                <div class="item-meta">
+
+                                    <span class="item-name">
+                                        {{ item.product.name }}
+                                    </span>
+
+                                    <span class="item-seller">
+                                        <i
+                                            class="fa-solid fa-store"
+                                            aria-hidden="true"
+                                        ></i>
+                                        {{ item.product.seller.username }}
+                                    </span>
+
+                                    <span class="item-qty">
+                                        Quantity: {{ item.quantity }}
+                                    </span>
+
+                                </div>
+
+                                <span class="item-price">
+                                    Rs. {{ item.subtotal|floatformat:2 }}
+                                </span>
+
+                            </div>
+
+                        {% empty %}
+                            <p>Your order summary is empty.</p>
+                        {% endfor %}
+
+                    </div>
+
+                    <hr class="divider">
+
+                    <div class="summary-row">
+                        <span>Subtotal</span>
+
+                        <span>
+                            Rs. {{ subtotal|floatformat:2 }}
+                        </span>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Delivery Fee</span>
+
+                        <span>
+                            Rs. {{ delivery_fee|floatformat:2 }}
+                        </span>
+                    </div>
+
+                    <hr class="divider">
+
+                    <div class="summary-row grand-total">
+                        <span>Grand Total</span>
+
+                        <span class="grand-price">
+                            Rs. {{ grand_total|floatformat:2 }}
+                        </span>
+                    </div>
+
+                    <button type="submit" class="place-order-btn">
+                        <span>Place Order</span>
+
+                        <i
+                            class="fa-solid fa-check"
+                            aria-hidden="true"
+                        ></i>
+                    </button>
+
+                    <p class="note">
+                        Your order will be processed after the server
+                        validates your details, product availability,
+                        prices, and selected payment method.
+                    </p>
+
+                </section>
+
+            </aside>
+
+        </form>
+
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 D-Mart. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>
+```

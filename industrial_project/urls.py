@@ -1,4 +1,3 @@
-
 from django.contrib import admin
 from django.urls import include, path
 from accounts.views import register
@@ -9,22 +8,6 @@ urlpatterns = [
     path('register/', register, name='root_register'),
     path('accounts/', include('accounts.urls')),
     path('', views.home, name='home'),
-
-    path('', views.home, name='home'),
-
-    path(
-    'products/',
-    include('products.urls')
-    ),
-
-    path(
-    'admin/',
-    admin.site.urls
-    ),
-
-    path(
-    'accounts/',
-    include('accounts.urls')
-    ),
-    
+    path('products/', include('products.urls')),
+    path('orders/', include('orders.urls')),
 ]

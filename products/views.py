@@ -2,7 +2,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Product, Cart, CartItem
 from decimal import Decimal
-
+from django.views.decorators.http import require_POST
+from django.contrib import messages
 
 def product_detail(request, product_id):
 
@@ -123,36 +124,51 @@ def cart_view(request):
         }
     )   
 
-    @login_required
-    def update_cart_quantity(request, item_id):
+    
+@login_required
+def update_cart_quantity(request, item_id):
 
-        cart_item = get_object_or_404(
-            CartItem,
-            id=item_id,
-            cart__user=request.user
-        )
+    cart_item = get_object_or_404(
+        CartItem,
+        id=item_id,
+        cart__user=request.user
+    )
 
-        product = cart_item.product
+    product = cart_item.product
 
-        if request.method == 'POST':
+    if request.method == 'POST':
 
-            action = request.POST.get('action')
+        action = request.POST.get('action')
 
-            if action == 'increase':
+        if action == 'increase':
 
-                if (
-                    product.status == 'ACTIVE'
-                    and product.stock > 0
-                    and cart_item.quantity < product.stock
-                ):
-                    cart_item.quantity += 1
-                    cart_item.save()
+            if (
+                product.status == 'ACTIVE'
+                and product.stock > 0
+                and cart_item.quantity < product.stock
+            ):
+                cart_item.quantity += 1
+                cart_item.save()
 
-            elif action == 'decrease':
+        elif action == 'decrease':
 
-                 if cart_item.quantity > 1:
-                    cart_item.quantity -= 1
-                    cart_item.save()
+            if cart_item.quantity > 1:
+                cart_item.quantity -= 1
+                cart_item.save()
 
     return redirect('cart')
 
+@login_required
+@require_POST
+def remove_cart_item(request, item_id):
+    deleted_count, _ = CartItem.objects.filter(
+        id=item_id,
+        cart__user=request.user
+    ).delete()
+
+    if deleted_count:
+        messages.success(request, "Product removed from your cart.")
+    else:
+        messages.error(request, "Cart item not found.")
+
+    return redirect('cart')
