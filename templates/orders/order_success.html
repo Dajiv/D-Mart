@@ -1,0 +1,98 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Successful | D-Mart</title>
+
+    <link rel="stylesheet" href="{% static 'CSS/orders/order_success.css' %}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <a href="{% url 'home' %}"><h1>D-Mart</h1></a>
+            </div>
+        </div>
+    </header>
+
+    <main class="success-main-content">
+        <div class="success-card">
+
+            <div class="success-icon-wrapper">
+                <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+            </div>
+
+            <h2>Order Placed Successfully!</h2>
+            <p class="success-subtitle">
+                Thank you for shopping with D-Mart.
+                Your industrial order has been received.
+            </p>
+
+            <div class="order-details-box">
+                <div class="detail-row">
+                    <span>Order Number:</span>
+                    <strong>#{{ order.order_number|default:order.id }}</strong>
+                </div>
+
+                <div class="detail-row">
+                    <span>Payment Method:</span>
+                    <strong>{{ order.get_payment_method_display|default:order.payment_method }}</strong>
+                </div>
+
+                <div class="detail-row">
+                    <span>Payment Status:</span>
+                    <span class="status-badge pending">
+                        {{ order.get_payment_status_display|default:order.payment_status }}
+                    </span>
+                </div>
+
+                <div class="detail-row">
+                    <span>Order Status:</span>
+                    <span class="status-badge processing">
+                        {{ order.get_order_status_display|default:order.status }}
+                    </span>
+                </div>
+
+                <div class="detail-row total-row">
+                    <span>Grand Total:</span>
+                    <strong class="total-price">
+                        Rs. {{ order.total_amount|floatformat:2 }}
+                    </strong>
+                </div>
+            </div>
+
+            <div class="delivery-address-box">
+                <h4>
+                    <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+                    Delivery Information
+                </h4>
+
+                <p>
+                    {{ order.delivery_address|linebreaksbr }}<br>
+                    Phone: {{ order.phone }}
+                </p>
+            </div>
+
+            <div class="action-container">
+                <a href="{% url 'home' %}" class="continue-shopping-btn">
+                    <i class="fa-solid fa-house" aria-hidden="true"></i>
+                    Continue Shopping
+                </a>
+            </div>
+
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 D-Mart. All rights reserved.
+           Industrial Multi-Vendor E-Commerce Portal.</p>
+    </footer>
+
+</body>
+</html>

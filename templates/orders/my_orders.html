@@ -1,0 +1,287 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Orders | D-Mart</title>
+
+    <link rel="stylesheet" href="{% static 'CSS/orders/my_orders.css' %}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <a href="{% url 'home' %}">
+                    <h1>D-Mart</h1>
+                </a>
+            </div>
+
+            <div class="nav-actions">
+                <a href="{% url 'home' %}" class="nav-link">
+                    <i class="fa-solid fa-house"></i> Home
+                </a>
+
+                <a href="{% url 'cart' %}" class="cart-btn">
+                    <i class="fa-solid fa-cart-shopping"></i> Cart
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+
+        <div class="page-header">
+            <h2>My Orders History</h2>
+            <p>Track and review your industrial product purchases.</p>
+        </div>
+
+        {% if messages %}
+            <div class="messages-container">
+                {% for message in messages %}
+                    <div class="alert {{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <form method="GET"
+              action="{% url 'my_orders' %}"
+              class="filter-form">
+
+            <div class="search-box">
+                <input
+                    type="text"
+                    name="q"
+                    placeholder="Search by Order ID..."
+                    value="{{ search_query|default:'' }}"
+                >
+
+                <button type="submit" aria-label="Search orders">
+                    <i class="fa-solid fa-search"></i>
+                </button>
+            </div>
+
+            <div class="filter-dropdowns">
+
+                <select name="status" onchange="this.form.submit()">
+                    <option value="">All Order Status</option>
+
+                    <option value="PENDING"
+                        {% if status_filter == 'PENDING' %}selected{% endif %}>
+                        Pending
+                    </option>
+
+                    <option value="CONFIRMED"
+                        {% if status_filter == 'CONFIRMED' %}selected{% endif %}>
+                        Confirmed
+                    </option>
+
+                    <option value="PROCESSING"
+                        {% if status_filter == 'PROCESSING' %}selected{% endif %}>
+                        Processing
+                    </option>
+
+                    <option value="SHIPPED"
+                        {% if status_filter == 'SHIPPED' %}selected{% endif %}>
+                        Shipped
+                    </option>
+
+                    <option value="DELIVERED"
+                        {% if status_filter == 'DELIVERED' %}selected{% endif %}>
+                        Delivered
+                    </option>
+
+                    <option value="CANCELLED"
+                        {% if status_filter == 'CANCELLED' %}selected{% endif %}>
+                        Cancelled
+                    </option>
+                </select>
+
+                <select name="payment_status" onchange="this.form.submit()">
+                    <option value="">All Payment Status</option>
+
+                    <option value="PENDING"
+                        {% if payment_filter == 'PENDING' %}selected{% endif %}>
+                        Pending
+                    </option>
+
+                    <option value="PAID"
+                        {% if payment_filter == 'PAID' %}selected{% endif %}>
+                        Paid
+                    </option>
+
+                    <option value="FAILED"
+                        {% if payment_filter == 'FAILED' %}selected{% endif %}>
+                        Failed
+                    </option>
+
+                    <option value="REFUNDED"
+                        {% if payment_filter == 'REFUNDED' %}selected{% endif %}>
+                        Refunded
+                    </option>
+                </select>
+
+                <select name="sort" onchange="this.form.submit()">
+                    <option value="newest"
+                        {% if sort_by == 'newest' or not sort_by %}selected{% endif %}>
+                        Newest First
+                    </option>
+
+                    <option value="oldest"
+                        {% if sort_by == 'oldest' %}selected{% endif %}>
+                        Oldest First
+                    </option>
+                </select>
+
+            </div>
+        </form>
+
+        {% if orders %}
+            <div class="orders-list">
+
+                {% for order in orders %}
+                    <article class="order-card">
+
+                        <div class="order-card-header">
+
+                            <div class="header-left">
+                                <h3>Order #{{ order.id }}</h3>
+
+                                <span class="order-date">
+                                    <i class="fa-regular fa-calendar"></i>
+                                    {{ order.created_at|date:"M d, Y H:i" }}
+                                </span>
+                            </div>
+
+                            <div class="header-right">
+                                <span class="badge status-{{ order.status|lower }}">
+                                    {{ order.get_status_display }}
+                                </span>
+
+                                <span class="badge payment-{{ order.payment_status|lower }}">
+                                    {{ order.get_payment_status_display }}
+                                </span>
+                            </div>
+
+                        </div>
+
+                        <div class="order-items-container">
+
+                            {% for item in order.items.all %}
+                                <div class="order-item-row">
+
+                                    <div class="item-info">
+                                        <h4>{{ item.product_name }}</h4>
+
+                                        <span class="seller-tag">
+                                            <i class="fa-solid fa-store"></i>
+                                            Seller:
+                                            {{ item.seller.username|default:"D-Mart Verified" }}
+                                        </span>
+                                    </div>
+
+                                    <div class="item-pricing">
+                                        <span>
+                                            Quantity: {{ item.quantity }}
+                                        </span>
+
+                                        <span>
+                                            Rs. {{ item.unit_price }} each
+                                        </span>
+
+                                        <strong>
+                                            Subtotal: Rs. {{ item.subtotal }}
+                                        </strong>
+                                    </div>
+
+                                </div>
+                            {% empty %}
+                                <p>No items are available for this order.</p>
+                            {% endfor %}
+
+                        </div>
+
+                        <div class="order-card-footer">
+
+                            <div class="footer-left">
+                                <p>
+                                    Payment Method:
+                                    <strong>
+                                        {{ order.get_payment_method_display }}
+                                    </strong>
+                                </p>
+
+                                <p>
+                                    Payment Status:
+                                    <strong>
+                                        {{ order.get_payment_status_display }}
+                                    </strong>
+                                </p>
+
+                                <p class="grand-total-text">
+                                    Total Amount:
+                                    <strong>Rs. {{ order.total_amount }}</strong>
+                                </p>
+                            </div>
+
+                           
+                        <div class="footer-actions">
+                            {% if order.status == 'PENDING' %}
+                            <form method="POST" action="{% url 'cancel_order' order.id %}" onsubmit="return confirm('Are you sure you want to cancel this order?');">
+            
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger" title="Cancel this pending order">
+                                    <i class="fa-solid fa-ban"></i>
+                                    Cancel Order
+                                </button>
+                            </form>
+    {% endif %}
+</div>
+
+
+                        </div>
+
+                    </article>
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+            <div class="empty-state">
+
+                <div class="empty-icon">
+                    <i class="fa-solid fa-box-open"></i>
+                </div>
+
+                <h3>No Orders Found</h3>
+
+                <p>
+                    You haven't placed any orders yet, or no orders match
+                    your search criteria.
+                </p>
+
+                <a href="{% url 'home' %}" class="btn btn-primary">
+                    Start Shopping
+                </a>
+
+            </div>
+        {% endif %}
+
+    </main>
+
+    <footer>
+        <p>
+            &copy; 2026 D-Mart. All rights reserved.
+            Industrial Multi-Vendor E-Commerce Portal.
+        </p>
+    </footer>
+
+</body>
+</html>
